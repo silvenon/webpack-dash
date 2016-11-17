@@ -1,0 +1,3 @@
+[submodule "webpack.js.org"]
+	path = webpack.js.org
+	url = https://github.com/webpack/webpack.js.org.git
