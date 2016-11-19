@@ -28,12 +28,13 @@ function getItemRecords (item, sourceDir, dashType) {
   }
 
   return fsp.readFile(path.join(SRC, sourcePath)).then(content => {
-    const { document, title, anchors } = extractFromDoc(content.toString(), sourceDir)
+    const { document, title, anchors, isEmpty } = extractFromDoc(content.toString(), sourceDir)
     return fsp.writeFile(path.join(DEST, destPath), document).then(() => {
       return [{
         type: dashType,
         name: title,
         path: destPath,
+        isEmpty,
       }].concat(anchors.map(anchor => ({
         type: anchor.type,
         name: anchor.name,
@@ -66,6 +67,7 @@ fsp.mkdirs(DEST)
     const flattenedRecords = records
       .reduce((p, c) => p.concat(c), [])
       .reduce((p, c) => p.concat(c), [])
+      .filter(record => !record.isEmpty) // reject empty pages
     return saveRecords(flattenedRecords)
   })
   .then(() => {

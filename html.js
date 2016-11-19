@@ -52,10 +52,15 @@ function extractFromDoc (html, context) {
     }
   }).get()
 
+  const mainClone = $('.page__content').clone()
+  mainClone.find('h1').remove()
+  mainClone.find('blockquote').remove()
+
   return {
     document: $.html(),
     title: $('h1').text().trim(),
     anchors,
+    isEmpty: !anchors.length && mainClone.text().trim().length < 10,
   }
 }
 
