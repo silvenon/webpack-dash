@@ -25,9 +25,11 @@ function extractFromDoc (html, context) {
 
   // in case of the index page
   if (!context) {
-    $('.splash__section').eq(1).remove()
+    $('.splash__section').last().remove()
     const content = $.html('.splash__section')
     $('body').html(content)
+    $('h2').last().remove()
+    $('head').append('<style>.splash__section::after { content: normal }</style>')
     return {
       document: $.html(),
     }
