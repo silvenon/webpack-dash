@@ -2,7 +2,9 @@
 
 Documentation from [webpack.js.org](https://webpack.js.org/) parsed and annotated as a [Dash](https://kapeli.com/dash) docset. It's fast and it's offline! :zap:
 
-## Contribute
+## Development
+
+The script does its best to clean up the HTML, exclude empty records etc. If you noticed a problem, please contribute!
 
 ### Install dependencies
 
