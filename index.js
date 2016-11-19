@@ -70,7 +70,8 @@ fsp.mkdirs(DEST)
     return saveRecords(flattenedRecords)
   })
   .then(() => {
-    console.log('webpack.docset built')
+    shell.exec('tar --exclude=".DS_Store" -cvzf webpack.tgz webpack.docset')
+    console.log('webpack.tgz built')
   })
   .catch(err => {
     console.error(err.stack)

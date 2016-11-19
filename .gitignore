@@ -2,3 +2,4 @@
 node_modules
 *.log
 webpack.docset/Contents/Resources
+webpack.tgz
