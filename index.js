@@ -44,14 +44,6 @@ function getItemRecords (item, sourceDir, dashType) {
   })
 }
 
-function getSectionRecords ({ sourceDir, dashType }) {
-  return fsp.readdir(path.join(SRC, sourceDir)).then(items => {
-    return Promise.all(items.map(item => {
-      return getItemRecords(item, sourceDir, dashType)
-    }))
-  })
-}
-
 fsp.mkdirs(DEST)
   .then(() => fsp.emptyDir(DEST))
   .then(() => shell.cp('-r', path.join(SRC, '*.css'), DEST))
@@ -61,7 +53,13 @@ fsp.mkdirs(DEST)
       return fsp.writeFile(path.join(DEST, 'index.html'), document)
     })
   })
-  .then(() => SECTIONS.map(getSectionRecords))
+  .then(() => SECTIONS.map(({ sourceDir, dashType }) => {
+    return fsp.readdir(path.join(SRC, sourceDir)).then(items => {
+      return Promise.all(items.map(item => {
+        return getItemRecords(item, sourceDir, dashType)
+      }))
+    })
+  }))
   .then(promises => Promise.all(promises))
   .then(records => {
     const flattenedRecords = records
