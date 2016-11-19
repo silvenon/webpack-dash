@@ -4,7 +4,7 @@ Documentation from [webpack.js.org](https://webpack.js.org/) parsed and annotate
 
 ## Development
 
-The script does its best to clean up the HTML, exclude empty records etc. If you noticed a problem, please contribute!
+The script does its best to clean up the HTML, exclude empty records etc. If you notice a problem, please contribute!
 
 ### Install dependencies
 
