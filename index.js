@@ -47,6 +47,7 @@ function getItemRecords (item, sourceDir, dashType) {
 fsp.mkdirs(DEST)
   .then(() => fsp.emptyDir(DEST))
   .then(() => shell.cp('-r', path.join(SRC, '*.css'), DEST))
+  .then(() => shell.cp(path.join(SRC, 'assets', 'favicon.ico'), DEST)
   .then(() => {
     return fsp.readFile(path.join(SRC, 'index.html')).then(content => {
       const { document } = extractFromDoc(content.toString())

@@ -19,7 +19,7 @@ function getDashType (text, hasCode, context) {
 function extractFromDoc (html, context) {
   const $ = cheerio.load(html)
 
-  $('[href*=docsearch], [src*=docsearch]').remove()
+  $('[href*=favicon], [href*=docsearch], [src*=docsearch]').remove()
   const cssPath = $('[rel=stylesheet]').attr('href')
   $('[rel=stylesheet]').attr('href', cssPath.substring(1))
 
