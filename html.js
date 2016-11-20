@@ -50,7 +50,7 @@ function extractFromDoc (html, context) {
       name,
       href: $(el).find('.anchor').attr('href'),
     }
-  }).get()
+  }).get().filter(anchor => anchor.href)
 
   const mainClone = $('.page__content').clone()
   mainClone.find('h1').remove()
