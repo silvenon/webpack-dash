@@ -3,7 +3,7 @@
   "scripts": {
     "build": "eslint . --fix && node index.js"
   },
-  "devDependencies": {
+  "dependencies": {
     "chalk": "^1.1.3",
     "cheerio": "^0.22.0",
     "eslint": "^3.10.2",
