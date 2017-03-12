@@ -1,7 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "build": "eslint . --fix && node index.js"
+    "update": "cd webpack.js.org && git pull && cd -",
+    "build:frontend": "cd webpack.js.org && yarn && yarn run fetch && yarn run build && cd -",
+    "build:docset": "eslint . --fix && node index.js",
+    "build": "yarn run build:frontend && yarn run build:docset"
   },
   "dependencies": {
     "chalk": "^1.1.3",
