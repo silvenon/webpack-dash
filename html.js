@@ -16,12 +16,17 @@ function getDashType (text, hasCode, context) {
   }
 }
 
-function extractFromDoc (html, context) {
-  const $ = cheerio.load(html)
+function parseFileContents (data, context) {
+  const $ = cheerio.load(data.toString())
 
-  $('[href*=favicon], [href*=docsearch], [src*=docsearch]').remove()
+  // some pages contain no content, they just redirect to another page,
+  // in that case mark the page as empty and don't save the record
+  if ($('[http-equiv="refresh"]').length > 0) return false
+
+  $('[href*=favicon], [href*=docsearch], [src*=docsearch], [href*="fonts.googleapis.com"], [name=theme-color]').remove()
   const cssPath = $('[rel=stylesheet]').attr('href')
-  $('[rel=stylesheet]').attr('href', cssPath.substring(1))
+  // Dash can't do absolute paths
+  $('[rel=stylesheet]').attr('href', cssPath.slice(1))
 
   // in case of the index page
   if (!context) {
@@ -35,11 +40,13 @@ function extractFromDoc (html, context) {
     }
   }
 
-  const content = $.html('.page__content')
-  $('body').html(content)
+  $('body').html($('.page__content'))
 
   // remove unnecessary elements
-  $('.page__edit, .icon-link, .contributors').remove()
+  const pageEdit = $('.page__edit')
+  pageEdit
+    .add(pageEdit.next().nextAll())
+    .remove()
 
   const anchors = $('h2, h3').map((i, el) => {
     const name = $(el).text().trim()
@@ -56,12 +63,15 @@ function extractFromDoc (html, context) {
   mainClone.find('h1').remove()
   mainClone.find('blockquote').remove()
 
+  // in case there's is (almost) no content, ignore the document
+  if (anchors.length === 0 && mainClone.text().trim().length < 10) return
+
   return {
-    document: $.html(),
+    html: $.html(),
     title: $('h1').text().trim(),
     anchors,
-    isEmpty: !anchors.length && mainClone.text().trim().length < 10,
+    context,
   }
 }
 
-module.exports = extractFromDoc
+module.exports = parseFileContents

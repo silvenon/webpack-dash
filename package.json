@@ -14,6 +14,7 @@
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^2.0.1",
     "fs-promise": "^2.0.0",
+    "lodash": "^4.17.4",
     "sequelize": "^3.26.0",
     "shelljs": "^0.7.5",
     "sqlite3": "^3.1.8"

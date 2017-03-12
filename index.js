@@ -1,78 +1,103 @@
 const path = require('path')
 const fsp = require('fs-promise')
 const shell = require('shelljs')
-const extractFromDoc = require('./html')
+const _ = require('lodash')
+const parseFileContents = require('./html')
 const saveRecords = require('./database')
+const chalk = require('chalk')
 
 const SRC = path.join(__dirname, 'webpack.js.org', 'build')
 const DEST = path.join(__dirname, 'webpack.docset', 'Contents', 'Resources', 'Documents')
+// folders in webpack.js.org/build
 const SECTIONS = [
   { sourceDir: 'api', dashType: 'Guide' },
   { sourceDir: 'concepts', dashType: 'Guide' },
   { sourceDir: 'configuration', dashType: 'Guide' },
-  { sourceDir: 'get-started', dashType: 'Guide' },
+  { sourceDir: 'development', dashType: 'Guide' },
   { sourceDir: 'guides', dashType: 'Guide' },
   { sourceDir: 'loaders', dashType: 'Module' },
   { sourceDir: 'plugins', dashType: 'Plugin' },
+  { sourceDir: 'pluginsapi', dashType: 'Plugin' },
+  { sourceDir: 'support', dashType: 'Guide' },
 ]
 
-function getItemRecords (item, sourceDir, dashType) {
-  let sourcePath, destPath
-
-  if (item === 'index.html') {
-    sourcePath = path.join(sourceDir, item)
-    destPath = `${sourceDir}.html`
-  } else {
-    sourcePath = path.join(sourceDir, item, 'index.html')
-    destPath = `${sourceDir}-${path.basename(item)}.html`
-  }
-
-  return fsp.readFile(path.join(SRC, sourcePath)).then(content => {
-    const { document, title, anchors, isEmpty } = extractFromDoc(content.toString(), sourceDir)
-    return fsp.writeFile(path.join(DEST, destPath), document).then(() => {
-      return [{
-        type: dashType,
-        name: title,
-        path: destPath,
-        isEmpty,
-      }].concat(anchors.map(anchor => ({
-        type: anchor.type,
-        name: anchor.name,
-        path: destPath + anchor.href,
-      })))
-    })
-  })
+function writeAssets () {
+  return Promise.resolve()
+    .then(() => shell.cp('-r', path.join(SRC, '*.css'), DEST))
+    .then(() => shell.cp(path.join(SRC, 'assets', 'favicon.ico'), DEST))
 }
 
-fsp.mkdirs(DEST)
-  .then(() => fsp.emptyDir(DEST))
-  .then(() => shell.cp('-r', path.join(SRC, '*.css'), DEST))
-  .then(() => shell.cp(path.join(SRC, 'assets', 'favicon.ico'), DEST))
-  .then(() => {
-    return fsp.readFile(path.join(SRC, 'index.html')).then(content => {
-      const { document } = extractFromDoc(content.toString())
-      return fsp.writeFile(path.join(DEST, 'index.html'), document)
-    })
-  })
-  .then(() => SECTIONS.map(({ sourceDir, dashType }) => {
-    return fsp.readdir(path.join(SRC, sourceDir)).then(items => {
-      return Promise.all(items.map(item => {
-        return getItemRecords(item, sourceDir, dashType)
-      }))
-    })
-  }))
-  .then(promises => Promise.all(promises))
-  .then(records => {
-    const flattenedRecords = records
-      .reduce((p, c) => p.concat(c), [])
-      .reduce((p, c) => p.concat(c), [])
-      .filter(record => !record.isEmpty) // reject empty pages
-    return saveRecords(flattenedRecords)
-  })
-  .then(() => {
-    shell.exec('tar --exclude=".DS_Store" -cvzf webpack.tgz webpack.docset')
-    console.log('webpack.tgz built')
-  })
-  .catch(err => {
-    console.error(err.stack)
-  })
+function writeIndexFile () {
+  return fsp.readFile(path.join(SRC, 'index.html'))
+    .then(data => fsp.writeFile(path.join(DEST, 'index.html'), parseFileContents(data).document))
+}
+
+function getItemPaths (item, sourceDir) {
+  let src, dest
+
+  // flattening file structure to make it easier to reference the CSS file
+  // api/cli/index.html > api-cli.html
+  if (item === 'index.html') {
+    src = path.join(sourceDir, item)
+    dest = `${sourceDir}.html`
+  // api/cli/foo > api-cli-foo.html
+  } else {
+    src = path.join(sourceDir, item, 'index.html')
+    dest = `${sourceDir}-${path.basename(item)}.html`
+  }
+
+  return {
+    src,
+    dest,
+  }
+}
+
+function getDocumentRecords (document, dashType, dest) {
+  return [{
+    type: dashType,
+    name: document.title,
+    path: dest,
+  }].concat(document.anchors.map(anchor => ({
+    type: anchor.type,
+    name: anchor.name,
+    path: dest + anchor.href,
+  })))
+}
+
+// meat and potatoes
+function generateRecords () {
+  return Promise.resolve()
+    .then(() => SECTIONS.map(section => fsp.readdir(path.join(SRC, section.sourceDir))
+      .then(items => items
+        .map(item => getItemPaths(item, section.sourceDir))
+        .map(itemPath => fsp.readFile(path.join(SRC, itemPath.src))
+          .then(data => parseFileContents(data, section.sourceDir))
+          .then(document => {
+            if (!document) return
+            return fsp.writeFile(path.join(DEST, itemPath.dest), document.html)
+              .then(() => getDocumentRecords(document, section.dashType, itemPath.dest))
+          })))
+      .then(promises => Promise.all(promises))))
+    .then(promises => Promise.all(promises))
+    .then(_.flattenDeep)
+    .then(records => records.filter(Boolean))
+    .then(saveRecords)
+}
+
+function createTarball () {
+  return shell.exec('tar --exclude=".DS_Store" -czf webpack.tgz webpack.docset')
+}
+
+function init () {
+  return Promise.resolve()
+    .then(() => fsp.mkdirs(DEST))
+    .then(() => fsp.emptyDir(DEST))
+    .then(writeAssets)
+    .then(writeIndexFile)
+    .then(generateRecords)
+    .then(createTarball)
+    .then(() => console.log(chalk.green.bold('📦  webpack.docset & webpack.tgz built')))
+    .catch(err => console.error(chalk.red(err.stack)))
+}
+
+init() // 🚀
