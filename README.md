@@ -2,6 +2,10 @@
 
 Documentation from [webpack.js.org](https://webpack.js.org/) parsed and annotated as a [Dash](https://kapeli.com/dash) docset. It's fast and it's offline! :zap:
 
+## Where do I find this docset?
+
+In Dash go to Preferences › Downloads › User Contributed.
+
 ## Development
 
 The script does its best to clean up the HTML, exclude empty records etc. If you notice a problem, please contribute!
