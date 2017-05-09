@@ -6,6 +6,8 @@ Documentation from [webpack.js.org](https://webpack.js.org/) parsed and annotate
 
 In Dash go to Preferences › Downloads › User Contributed.
 
+If you notice that the docset in Dash got outdated, feel free to send a PR to [Kapeli/Dash-User-Contributions](https://github.com/Kapeli/Dash-User-Contributions) using the docset you generate here.
+
 ## Development
 
 The script does its best to clean up the HTML, exclude empty records etc. If you notice a problem, please contribute!
