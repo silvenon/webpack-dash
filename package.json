@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "update": "cd webpack.js.org && git pull && cd -",
-    "build:frontend": "cd webpack.js.org && yarn && yarn run fetch && yarn run build && cd -",
+    "update": "cd webpack.js.org && git pull origin master && cd -",
+    "build:frontend": "cd webpack.js.org && yarn && yarn run build && cd -",
     "build:docset": "node ./",
     "build": "yarn run build:frontend && yarn run build:docset",
     "precommit": "lint-staged"
