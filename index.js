@@ -1,7 +1,7 @@
 const path = require('path')
 const fsp = require('fs-promise')
 const shell = require('shelljs')
-const _ = require('lodash')
+const flattenDeep = require('lodash/flattenDeep')
 const parseFileContents = require('./html')
 const saveRecords = require('./database')
 const chalk = require('chalk')
@@ -112,7 +112,7 @@ function generateRecords() {
       )
     )
     .then(promises => Promise.all(promises))
-    .then(_.flattenDeep)
+    .then(flattenDeep)
     .then(records => records.filter(Boolean))
     .then(saveRecords)
 }
