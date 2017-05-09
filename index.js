@@ -27,24 +27,25 @@ const SECTIONS = [
   { sourceDir: 'support', dashType: 'Guide' },
 ]
 
-function writeAssets() {
-  return Promise.resolve()
-    .then(() => shell.cp('-r', path.join(SRC, '*.css'), DEST))
-    .then(() => shell.cp(path.join(SRC, 'assets', 'favicon.ico'), DEST))
+async function prepareDestDirectory() {
+  await fsp.mkdirs(DEST)
+  await fsp.emptyDir(DEST)
 }
 
-function writeIndexFile() {
-  return fsp
-    .readFile(path.join(SRC, 'index.html'))
-    .then(data =>
-      fsp.writeFile(
-        path.join(DEST, 'index.html'),
-        parseFileContents(data).document
-      )
-    )
+async function writeAssets() {
+  await shell.cp('-r', path.join(SRC, '*.css'), DEST)
+  await shell.cp(path.join(SRC, 'assets', 'favicon.ico'), DEST)
 }
 
-function getItemPaths(item, sourceDir) {
+async function writeIndexFile() {
+  const data = await fsp.readFile(path.join(SRC, 'index.html'))
+  await fsp.writeFile(
+    path.join(DEST, 'index.html'),
+    parseFileContents(data).document
+  )
+}
+
+function getItemSrcAndDestPaths(item, sourceDir) {
   let src, dest
 
   // flattening file structure to make it easier to reference the CSS file
@@ -64,15 +65,15 @@ function getItemPaths(item, sourceDir) {
   }
 }
 
-function getDocumentRecords(document, dashType, dest) {
+function getDocumentRecords(doc, dashType, dest) {
   return [
     {
       type: dashType,
-      name: document.title,
+      name: doc.title,
       path: dest,
     },
   ].concat(
-    document.anchors.map(anchor => ({
+    doc.anchors.map(anchor => ({
       type: anchor.type,
       name: anchor.name,
       path: dest + anchor.href,
@@ -81,58 +82,42 @@ function getDocumentRecords(document, dashType, dest) {
 }
 
 // meat and potatoes
-function generateRecords() {
-  return Promise.resolve()
-    .then(() =>
-      SECTIONS.map(section =>
-        fsp
-          .readdir(path.join(SRC, section.sourceDir))
-          .then(items =>
-            items
-              .map(item => getItemPaths(item, section.sourceDir))
-              .map(itemPath =>
-                fsp
-                  .readFile(path.join(SRC, itemPath.src))
-                  .then(data => parseFileContents(data, section.sourceDir))
-                  .then(document => {
-                    if (!document) return
-                    return fsp
-                      .writeFile(path.join(DEST, itemPath.dest), document.html)
-                      .then(() =>
-                        getDocumentRecords(
-                          document,
-                          section.dashType,
-                          itemPath.dest
-                        )
-                      )
-                  })
-              )
-          )
-          .then(promises => Promise.all(promises))
+async function generateRecords() {
+  const records = await Promise.all(
+    SECTIONS.map(async section => {
+      const items = await fsp.readdir(path.join(SRC, section.sourceDir))
+      return Promise.all(
+        items
+          .map(item => getItemSrcAndDestPaths(item, section.sourceDir))
+          .map(async itemPath => {
+            const data = await fsp.readFile(path.join(SRC, itemPath.src))
+            const doc = parseFileContents(data, section.sourceDir)
+            if (!doc) return
+            await fsp.writeFile(path.join(DEST, itemPath.dest), doc.html)
+            return getDocumentRecords(doc, section.dashType, itemPath.dest)
+          })
       )
-    )
-    .then(promises => Promise.all(promises))
-    .then(flattenDeep)
-    .then(records => records.filter(Boolean))
-    .then(saveRecords)
+    })
+  )
+
+  await saveRecords(flattenDeep(records).filter(Boolean))
 }
 
-function createTarball() {
-  return shell.exec('tar --exclude=".DS_Store" -czf webpack.tgz webpack.docset')
+async function createTarball() {
+  await shell.exec('tar --exclude=".DS_Store" -czf webpack.tgz webpack.docset')
 }
 
-function init() {
-  return Promise.resolve()
-    .then(() => fsp.mkdirs(DEST))
-    .then(() => fsp.emptyDir(DEST))
-    .then(writeAssets)
-    .then(writeIndexFile)
-    .then(generateRecords)
-    .then(createTarball)
-    .then(() =>
-      console.log(chalk.green.bold('📦  webpack.docset & webpack.tgz built'))
-    )
-    .catch(err => console.error(chalk.red(err.stack)))
+async function init() {
+  await prepareDestDirectory()
+  await writeAssets()
+  await writeIndexFile()
+  await generateRecords()
+  await createTarball()
+  console.log(chalk.green.bold('📦  webpack.docset & webpack.tgz built'))
 }
 
-init() // 🚀
+try {
+  init() // 🚀
+} catch (error) {
+  console.error(chalk.red(error.stack))
+}

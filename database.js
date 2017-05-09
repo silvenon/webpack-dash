@@ -22,10 +22,9 @@ const SearchIndex = seq.define(
   }
 )
 
-function saveRecords(records) {
-  return SearchIndex.sync({ force: true }).then(() => {
-    return SearchIndex.bulkCreate(records)
-  })
+async function saveRecords(records) {
+  await SearchIndex.sync({ force: true })
+  await SearchIndex.bulkCreate(records)
 }
 
 module.exports = saveRecords
