@@ -1,7 +1,6 @@
 {
   "private": true,
   "scripts": {
-    "update": "cd webpack.js.org && git pull origin master && cd -",
     "build:frontend": "cd webpack.js.org && npm install --no-package-lock && npm run build && cd -",
     "build:docset": "node ./",
     "build": "npm run build:frontend && npm run build:docset",
