@@ -32,10 +32,14 @@ function parseFileContents(data, context) {
 
   // in case of the index page
   if (!context) {
-    $('.splash__section').last().remove()
+    $('.splash__section')
+      .last()
+      .remove()
     const content = $.html('.splash__section')
     $('body').html(content)
-    $('h2').last().remove()
+    $('h2')
+      .last()
+      .remove()
     $('head').append(
       '<style>.splash__section::after { content: normal }</style>'
     )
@@ -50,17 +54,34 @@ function parseFileContents(data, context) {
   const pageEdit = $('.page__edit')
   pageEdit.add(pageEdit.next().nextAll()).remove()
 
+  // remove Gitter
+  $('[class*=gitter]').remove()
+
+  // remove "edit document" links
+  $('.page-links').remove()
+
+  // remove contributors
+  $('.contributors')
+    .parent()
+    .remove()
+
   const anchors = $('h2, h3')
     .map((i, el) => {
-      const name = $(el).text().trim()
+      const name = $(el)
+        .text()
+        .trim()
       const type = getDashType(name, $(el).has('code'), context) || 'Section'
       $(el).prepend(
-        `<a name="//apple_ref/cpp/${escape(type)}/${escape(name)}" class="dashAnchor"></a>`
+        `<a name="//apple_ref/cpp/${escape(type)}/${escape(
+          name
+        )}" class="dashAnchor"></a>`
       )
       return {
         type,
         name,
-        href: $(el).find('.anchor').attr('href'),
+        href: $(el)
+          .find('.anchor')
+          .attr('href'),
       }
     })
     .get()
@@ -75,7 +96,9 @@ function parseFileContents(data, context) {
 
   return {
     html: $.html(),
-    title: $('h1').text().trim(),
+    title: $('h1')
+      .text()
+      .trim(),
     anchors,
     context,
   }
