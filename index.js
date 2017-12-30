@@ -129,9 +129,12 @@ function init() {
     .then(writeIndexFile)
     .then(generateRecords)
     .then(createTarball)
-    .then(() =>
+    .then(() => {
       console.log(chalk.green.bold('📦  webpack.docset & webpack.tgz built'))
-    )
+      console.log(
+        'submit these to https://github.com/Kapeli/Dash-User-Contributions'
+      )
+    })
     .catch(err => console.error(chalk.red(err.stack)))
 }
 
