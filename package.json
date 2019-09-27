@@ -17,7 +17,7 @@
     "cheerio": "^0.22.0",
     "fs-promise": "^2.0.0",
     "lodash": "^4.17.13",
-    "sequelize": "^3.26.0",
+    "sequelize": "^3.35.1",
     "shelljs": "^0.8.3",
     "sqlite3": "^3.1.8"
   },
