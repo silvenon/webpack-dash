@@ -20,7 +20,7 @@
     "chalk": "^2.4.2",
     "cheerio": "^0.22.0",
     "fs-promise": "^2.0.0",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.15",
     "sequelize": "^3.26.0",
     "shelljs": "^0.8.3",
     "sqlite3": "^3.1.8"
