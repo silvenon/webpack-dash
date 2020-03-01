@@ -12,8 +12,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "prettier --write --single-quote --trailing-comma es5 --no-semi",
-      "git add"
+      "prettier --write --single-quote --trailing-comma es5 --no-semi"
     ]
   },
   "dependencies": {
@@ -27,7 +26,7 @@
   },
   "devDependencies": {
     "husky": "^3.0.9",
-    "lint-staged": "^9.4.3",
+    "lint-staged": "^10.0.8",
     "prettier": "^1.19.1"
   }
 }
