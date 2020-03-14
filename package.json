@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build:frontend": "cd webpack.js.org && npm install --no-package-lock && npm run build && cd -",
+    "build:frontend": "cd webpack.js.org && yarn install && yarn build && cd -",
     "build:docset": "node ./",
     "build": "npm run build:frontend && npm run build:docset"
   },
