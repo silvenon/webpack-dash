@@ -32,7 +32,7 @@ You only have to do this once.
 
 ### Build
 
-```
+```sh
 yarn run build
 ```
 
@@ -42,13 +42,13 @@ This generates a `webpack.js.org` build, parses that content and generates neces
 
 To update the webpack documentation submodule to the latest version:
 
-```
+```sh
 yarn run update
 ```
 
 Now you can rebuild the docset with the latest changes:
 
-```
+```sh
 yarn run build
 ```
 
