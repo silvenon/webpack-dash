@@ -22,7 +22,7 @@
     "lodash": "^4.17.15",
     "sequelize": "^3.26.0",
     "shelljs": "^0.8.3",
-    "sqlite3": "^3.1.8"
+    "sqlite3": "^4.1.1"
   },
   "devDependencies": {
     "husky": "^3.0.9",

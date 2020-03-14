@@ -6,7 +6,7 @@ const parseFileContents = require('./html')
 const saveRecords = require('./database')
 const chalk = require('chalk')
 
-const SRC = path.join(__dirname, 'webpack.js.org', 'build')
+const SRC = path.join(__dirname, 'webpack.js.org', 'dist')
 const DEST = path.join(
   __dirname,
   'webpack.docset',
@@ -14,7 +14,7 @@ const DEST = path.join(
   'Resources',
   'Documents'
 )
-// folders in webpack.js.org/build
+// folders in webpack.js.org/dist
 const SECTIONS = [
   { sourceDir: 'api', dashType: 'Guide' },
   { sourceDir: 'concepts', dashType: 'Guide' },
