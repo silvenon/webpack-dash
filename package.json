@@ -1,5 +1,8 @@
 {
   "private": true,
+  "engines": {
+    "node": ">=10 <=11"
+  },
   "scripts": {
     "build:frontend": "cd webpack.js.org && yarn install && yarn build && cd -",
     "build:docset": "node ./",
