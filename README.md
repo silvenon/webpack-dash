@@ -17,7 +17,7 @@ Make sure you have [Yarn](http://yarnpkg.com/) installed.
 ### Install dependencies
 
 ```sh
-yarn
+npm install
 ```
 
 ### Fetch webpack's documentation
@@ -33,7 +33,7 @@ You only have to do this once.
 ### Build
 
 ```sh
-yarn run build
+npm run build
 ```
 
 This generates a `webpack.js.org` build, parses that content and generates necessary stuff into `webpack.docset/Contents/Resources`.
@@ -43,13 +43,13 @@ This generates a `webpack.js.org` build, parses that content and generates neces
 To update the webpack documentation submodule to the latest version:
 
 ```sh
-yarn run update
+git submodule update --remote
 ```
 
 Now you can rebuild the docset with the latest changes:
 
 ```sh
-yarn run build
+npm run build
 ```
 
 ## License
