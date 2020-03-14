@@ -16,7 +16,7 @@
     ]
   },
   "dependencies": {
-    "chalk": "^2.4.2",
+    "chalk": "^3.0.0",
     "cheerio": "^0.22.0",
     "fs-promise": "^2.0.0",
     "lodash": "^4.17.15",
