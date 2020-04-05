@@ -20,7 +20,7 @@
     ]
   },
   "dependencies": {
-    "chalk": "^2.4.2",
+    "chalk": "^4.0.0",
     "cheerio": "^0.22.0",
     "del-cli": "^3.0.0",
     "fs-promise": "^2.0.0",
