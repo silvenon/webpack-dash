@@ -19,7 +19,7 @@ const SearchIndex = seq.define(
   {
     freezeTableName: true,
     timestamps: false,
-  }
+  },
 )
 
 function saveRecords(records) {

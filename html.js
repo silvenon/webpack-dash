@@ -24,7 +24,7 @@ function parseFileContents(data, context) {
   if ($('[http-equiv="refresh"]').length > 0) return false
 
   $(
-    '[href*=favicon], [href*=docsearch], [src*=docsearch], [href*="fonts.googleapis.com"], [name=theme-color]'
+    '[href*=favicon], [href*=docsearch], [src*=docsearch], [href*="fonts.googleapis.com"], [name=theme-color]',
   ).remove()
   const cssPath = $('[rel=stylesheet]').attr('href')
   // Dash can't do absolute paths
@@ -41,7 +41,7 @@ function parseFileContents(data, context) {
       .last()
       .remove()
     $('head').append(
-      '<style>.splash__section::after { content: normal }</style>'
+      '<style>.splash__section::after { content: normal }</style>',
     )
     return {
       document: $.html(),
@@ -73,8 +73,8 @@ function parseFileContents(data, context) {
       const type = getDashType(name, $(el).has('code'), context) || 'Section'
       $(el).prepend(
         `<a name="//apple_ref/cpp/${escape(type)}/${escape(
-          name
-        )}" class="dashAnchor"></a>`
+          name,
+        )}" class="dashAnchor"></a>`,
       )
       return {
         type,

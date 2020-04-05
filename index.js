@@ -12,7 +12,7 @@ const DEST = path.join(
   'webpack.docset',
   'Contents',
   'Resources',
-  'Documents'
+  'Documents',
 )
 // folders in webpack.js.org/dist
 const SECTIONS = [
@@ -39,8 +39,8 @@ function writeIndexFile() {
     .then(data =>
       fsp.writeFile(
         path.join(DEST, 'index.html'),
-        parseFileContents(data).document
-      )
+        parseFileContents(data).document,
+      ),
     )
 }
 
@@ -76,7 +76,7 @@ function getDocumentRecords(document, dashType, dest) {
       type: anchor.type,
       name: anchor.name,
       path: dest + anchor.href,
-    }))
+    })),
   )
 }
 
@@ -102,14 +102,14 @@ function generateRecords() {
                         getDocumentRecords(
                           document,
                           section.dashType,
-                          itemPath.dest
-                        )
+                          itemPath.dest,
+                        ),
                       )
-                  })
-              )
+                  }),
+              ),
           )
-          .then(promises => Promise.all(promises))
-      )
+          .then(promises => Promise.all(promises)),
+      ),
     )
     .then(promises => Promise.all(promises))
     .then(flattenDeep)
@@ -132,7 +132,7 @@ function init() {
     .then(() => {
       console.log(chalk.green.bold('📦  webpack.docset & webpack.tgz built'))
       console.log(
-        'submit these to https://github.com/Kapeli/Dash-User-Contributions'
+        'submit these to https://github.com/Kapeli/Dash-User-Contributions',
       )
     })
     .catch(err => console.error(chalk.red(err.stack)))
