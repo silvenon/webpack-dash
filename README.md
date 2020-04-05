@@ -20,37 +20,13 @@ Make sure you have [Yarn](http://yarnpkg.com/) installed.
 yarn install
 ```
 
-### Fetch webpack's documentation
-
-The docset is being generated from the `webpack.js.org` submodule, let's initialize and update it:
-
-```sh
-git submodule update --init
-```
-
-You only have to do this once.
-
-### Build
+### Build the docset
 
 ```sh
 yarn build
 ```
 
-This generates a `webpack.js.org` build, parses that content and generates necessary stuff into `webpack.docset/Contents/Resources`.
-
-### Update upstream
-
-To update the webpack documentation submodule to the latest version:
-
-```sh
-git submodule update --remote
-```
-
-Now you can rebuild the docset with the latest changes:
-
-```sh
-yarn build
-```
+This shallowly clones the prebuilt `gh-pages` branch from the webpack.js.org repo, parses that content and generates necessary stuff into `webpack.docset/Contents/Resources`.
 
 ## License
 

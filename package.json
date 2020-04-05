@@ -4,9 +4,10 @@
     "node": ">=10 <=11"
   },
   "scripts": {
-    "build:frontend": "cd webpack.js.org && yarn install && yarn build && cd -",
-    "build:docset": "node ./",
-    "build": "npm run build:frontend && npm run build:docset"
+    "clean": "del webpack.js.org webpack.docset/Contents/Resources webpack.tgz",
+    "build:frontend": "git clone https://github.com/webpack/webpack.js.org --depth 1 --branch gh-pages",
+    "build:docset": "node .",
+    "build": "yarn clean && yarn build:frontend && yarn build:docset"
   },
   "husky": {
     "hooks": {
@@ -21,6 +22,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "cheerio": "^0.22.0",
+    "del-cli": "^3.0.0",
     "fs-promise": "^2.0.0",
     "lodash": "^4.17.15",
     "sequelize": "^3.26.0",

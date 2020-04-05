@@ -6,7 +6,7 @@ const parseFileContents = require('./html')
 const saveRecords = require('./database')
 const chalk = require('chalk')
 
-const SRC = path.join(__dirname, 'webpack.js.org', 'dist')
+const SRC = path.join(__dirname, 'webpack.js.org')
 const DEST = path.join(
   __dirname,
   'webpack.docset',
