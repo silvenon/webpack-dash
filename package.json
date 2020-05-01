@@ -27,7 +27,7 @@
     "lodash": "^4.17.15",
     "sequelize": "^3.26.0",
     "shelljs": "^0.8.3",
-    "sqlite3": "^4.1.1"
+    "sqlite3": "^4.2.0"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
