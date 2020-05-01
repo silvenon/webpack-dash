@@ -25,7 +25,7 @@
     "del-cli": "^3.0.0",
     "fs-promise": "^2.0.0",
     "lodash": "^4.17.15",
-    "sequelize": "^3.26.0",
+    "sequelize": "^5.1.0",
     "shelljs": "^0.8.3",
     "sqlite3": "^4.1.1"
   },
